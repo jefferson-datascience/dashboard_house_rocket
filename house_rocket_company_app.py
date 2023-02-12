@@ -15,7 +15,7 @@ st.set_page_config(layout='wide')
 
 
 # Carregamento dos dados
-@st.cache(allow_output_mutation=True)
+@st.cache_data()
 def base_de_dados(file):
     dataset = pd.read_csv(file)
 
@@ -24,7 +24,7 @@ def base_de_dados(file):
     return dataset
 
 
-@st.cache(allow_output_mutation=True)
+@st.cache_data()
 def statistic_descritive(dataset):
     # Separando somente os dados numéricos
     num_attributes = dataset.select_dtypes(include=['int64', 'float64'])
@@ -204,9 +204,12 @@ elif page == 'Aquisição Imóveis':
 
     for name, row in data.iterrows():
         folium.Marker([row['lat'], row['long']],
-                      popup='Sold R${} on: {}. Características: {} sqrt, {} bedrooms, {} bathrooms, {} Year Built.'.format(
-                          row['price'], row['date'], row, ['sqft_living'], row['bedrooms'], row['bathrooms'],
-                          row['yr_built'])).add_to(marker_cluster)
+                      popup='Price: R$ {}. Bathrooms: {}. Bedrooms: {}. Year Built: {} Year Renovated :{} '
+                            'Zipcode: {}'.format(row['price'],
+                                                 row['bathrooms'],
+                                                 row['bedrooms'],
+                                                 row['yr_built'],
+                                                 row['yr_renovated'], row['zipcode'])).add_to(marker_cluster)
 
     folium_static(portfolio_densidade)
 
@@ -220,7 +223,10 @@ elif page == 'Aquisição Imóveis':
     tabela = statistic_descritive(data)
 
     visualizacao_dados_metrics(tabela)
+
+
 # ---------------------------------------------- DESEMPENHO DE NEGÓCIO - VERÃO -----------------------------------------
+
 
 elif page == "Desempenho de Negócio - Verão":
 
